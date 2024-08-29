@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const axiosSecure = axios.create({
-    baseURL : 'http://localhost:8000'
+    baseURL : 'https://vistavoyageserver.vercel.app'
 })
 
 export default function useAxiosSecure() {

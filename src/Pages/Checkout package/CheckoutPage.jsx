@@ -6,6 +6,7 @@ import Logo from '../../Components/Logo/Logo';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from '../../Forms/CheckoutForm';
 import { loadStripe } from '@stripe/stripe-js';
+import useAuth from '../../Hooks/useAuth';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
 
@@ -14,8 +15,9 @@ export default function Checkout() {
     const axiosCommon = useAxiosCommon();
     const [guides, setGuides] = useState([]);
     const [selectedGuide, setSelectedGuide] = useState();
+    const {user} = useAuth();
 
-    const { data: selectedForCheckout, isLoading } = useQuery({
+    let { data: selectedForCheckout, isLoading } = useQuery({
         queryKey: ['selectedForCheckout'],
         queryFn: async () => {
             const { data } = await axiosCommon.get(`/selected-for-checkout/${id}`);
@@ -23,6 +25,10 @@ export default function Checkout() {
         }
     })
 
+    selectedForCheckout = {
+        ...selectedForCheckout, userEmail : user?.email
+    }
+    
     useEffect(() => {
         const getGuides = async () => {
             try {

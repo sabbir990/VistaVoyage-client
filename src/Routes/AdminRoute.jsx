@@ -11,7 +11,7 @@ export default function AdminRoute({children}) {
     const location = useLocation();
 
     if (loading || isLoading) {
-        return <div className='flex items-center justify-center h-screen'>
+        return <div className='flex items-center justify-center'>
             <span className="loading loading-dots loading-lg"></span>
         </div>
     }

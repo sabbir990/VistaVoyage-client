@@ -24,6 +24,8 @@ export default function WishlistedCheckout() {
         }
     })
 
+    console.log(selectedForCheckout)
+
     useEffect(() => {
         const getGuides = async () => {
             try {

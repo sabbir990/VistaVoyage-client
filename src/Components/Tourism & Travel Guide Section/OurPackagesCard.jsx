@@ -33,7 +33,7 @@ const OurPackagesCard = ({ singlePackage }) => {
         try{
             if(user){
                 if(role !== 'user'){
-                    toast.error("You must be user before adding an item to wishlist!")
+                    return toast.error("You must be user before adding an item to wishlist!")
                 }
                 
                 await mutateAsync(wishlistedPackage);

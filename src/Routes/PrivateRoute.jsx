@@ -7,12 +7,13 @@ export default function PrivateRoute({ children }) {
     const location = useLocation();
 
     if (loading) {
-        return <div className='flex items-center justify-center h-screen'>
+        return <div className='flex items-center justify-center'>
+            {console.log("Hello")}
             <span className="loading loading-dots loading-lg"></span>
         </div>
     }
 
-    if(user){
+    if(user && !loading){
         return children;
     }
     

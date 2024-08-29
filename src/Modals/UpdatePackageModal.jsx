@@ -6,7 +6,7 @@ import {
     DialogPanel,
     DialogTitle,
 } from '@headlessui/react'
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import Logo from '../Components/Logo/Logo'
 import useAuth from '../Hooks/useAuth'
 import { ImSpinner3 } from 'react-icons/im'
@@ -18,6 +18,7 @@ import useHostImage from '../Hooks/useHostImage'
 const UpdatePackageModal = ({ closeModal, isOpen, _id, refetch }) => {
     const { loading, setLoading } = useAuth();
     const axiosCommon = useAxiosCommon();
+    const [isPending, setIsPending] = useState(false)
 
     const { data: specifiedPackage, isLoading } = useQuery({
         queryKey: ['specifiedPackage', _id],
@@ -34,7 +35,7 @@ const UpdatePackageModal = ({ closeModal, isOpen, _id, refetch }) => {
         },
 
         onSuccess: () => {
-            setLoading(false);
+            setIsPending(false);
             toast.success("Package Updated successfully!");
             closeModal();
             refetch();
@@ -65,7 +66,7 @@ const UpdatePackageModal = ({ closeModal, isOpen, _id, refetch }) => {
         const contact_information = form.contact_information.value;
 
         try {
-            setLoading(true);
+            setIsPending(true);
 
             const image_url = await useHostImage(place_image);
 
@@ -75,9 +76,9 @@ const UpdatePackageModal = ({ closeModal, isOpen, _id, refetch }) => {
 
             await mutateAsync(updatedPackage);
 
-            setLoading(false)
+            setIsPending(false)
         } catch (error) {
-            setLoading(false)
+            setIsPending(false)
             console.log(error);
             toast.error(error.message)
         }
@@ -243,7 +244,7 @@ const UpdatePackageModal = ({ closeModal, isOpen, _id, refetch }) => {
                                         className="w-full py-3 px-4 flex items-center justify-center bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                     >
                                         {
-                                            loading ? <ImSpinner3 className='animate-spin' /> : 'Add Package'
+                                            isPending ? <ImSpinner3 className='animate-spin' /> : 'Add Package'
                                         }
                                     </button>
                                 </form>

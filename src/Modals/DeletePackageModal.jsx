@@ -5,7 +5,7 @@ import {
     DialogPanel,
     DialogTitle,
 } from '@headlessui/react'
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import toast from 'react-hot-toast';
 import useAxiosCommon from '../Hooks/useAxiosCommon';
 import { useMutation } from '@tanstack/react-query';
@@ -14,6 +14,7 @@ import { ImSpinner3 } from 'react-icons/im';
 const DeletePackageModal = ({ closeModal, isOpen, _id, refetch }) => {
     const axiosCommon = useAxiosCommon();
     const { setLoading, loading } = useAuth();
+    const [isLoading, setIsLoading] = useState(false)
 
     const { mutateAsync } = useMutation({
         mutationFn: async (id) => {
@@ -22,7 +23,7 @@ const DeletePackageModal = ({ closeModal, isOpen, _id, refetch }) => {
         },
 
         onSuccess: () => {
-            setLoading(false);
+            setIsLoading(false);
             toast.success("Package Deleted Successfully!")
             closeModal();
             refetch();
@@ -31,11 +32,11 @@ const DeletePackageModal = ({ closeModal, isOpen, _id, refetch }) => {
 
     const handleDeletePackage = async (id) => {
         try {
-            setLoading(true);
+            setIsLoading(true);
 
             await mutateAsync(id);
         } catch (error) {
-            setLoading(false)
+            setIsLoading(false)
             console.log(error);
             toast.error(error.message)
         }
@@ -87,7 +88,7 @@ const DeletePackageModal = ({ closeModal, isOpen, _id, refetch }) => {
                                             className="inline-flex justify-center rounded-full bg-red-500 text-white px-6 py-2 text-sm font-medium hover:bg-red-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2"
                                         >
                                             {
-                                                loading ? <ImSpinner3 className='animate-spin' /> : 'Delete'
+                                                isLoading ? <ImSpinner3 className='animate-spin' /> : 'Delete'
                                             }
                                         </button>
 

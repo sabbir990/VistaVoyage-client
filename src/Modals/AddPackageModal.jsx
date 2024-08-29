@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import {
     Dialog,
     Transition,
@@ -6,7 +5,7 @@ import {
     DialogPanel,
     DialogTitle,
 } from '@headlessui/react'
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import Logo from '../Components/Logo/Logo'
 import useAuth from '../Hooks/useAuth'
 import useAxiosCommon from '../Hooks/useAxiosCommon'
@@ -17,8 +16,8 @@ import { ImSpinner3 } from 'react-icons/im'
 
 const AddPackageModal = ({ closeModal, isOpen }) => {
     const axiosCommon = useAxiosCommon();
-    const { loading, setLoading } = useAuth();
-    const queryClient = useQueryClient()
+    const queryClient = useQueryClient();
+    const [isLoading, setIsLoading] = useState(false);
 
     const { mutateAsync } = useMutation({
         mutationFn: async (package_details) => {
@@ -27,7 +26,7 @@ const AddPackageModal = ({ closeModal, isOpen }) => {
         },
 
         onSuccess: () => {
-            setLoading(false);
+            setIsLoading(false);
             toast.success("Your item added successfully!");
             closeModal();
             queryClient.invalidateQueries(['packages'])
@@ -48,7 +47,7 @@ const AddPackageModal = ({ closeModal, isOpen }) => {
         const contact_information = form.contact_information.value;
 
         try {
-            setLoading(true);
+            setIsLoading(true);
             const image_url = await useHostImage(place_image);
 
             const myPackage = {
@@ -56,9 +55,9 @@ const AddPackageModal = ({ closeModal, isOpen }) => {
             }
 
             await mutateAsync(myPackage);
-            setLoading(false)
+            setIsLoading(false)
         } catch (error) {
-            setLoading(false);
+            setIsLoading(false);
             console.log(error);
             toast.error(error.message)
         }
@@ -231,7 +230,7 @@ const AddPackageModal = ({ closeModal, isOpen }) => {
                                         className="w-full py-3 px-4 flex items-center justify-center bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                     >
                                         {
-                                            loading ? <ImSpinner3 className='animate-spin' /> : 'Add Package'
+                                            isLoading ? <ImSpinner3 className='animate-spin' /> : 'Add Package'
                                         }
                                     </button>
                                 </form>

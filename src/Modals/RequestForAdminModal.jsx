@@ -5,7 +5,7 @@ import {
     DialogTitle,
     DialogPanel,
 } from '@headlessui/react'
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import useAuth from '../Hooks/useAuth'
 import toast from 'react-hot-toast';
 import { useMutation } from '@tanstack/react-query';
@@ -14,6 +14,7 @@ import { ImSpinner3 } from 'react-icons/im';
 
 const RequestToAdminModal = ({ closeModal, isOpen }) => {
     const { user, loading, setLoading } = useAuth();
+    const [isLoading, setIsLoading] = useState(false);
     const axiosCommon = useAxiosCommon();
 
     const { mutateAsync } = useMutation({
@@ -23,7 +24,7 @@ const RequestToAdminModal = ({ closeModal, isOpen }) => {
         },
 
         onSuccess: () => {
-            setLoading(false)
+            setIsLoading(false)
             toast.success("You request is done! Wait for the admin approval");
             closeModal();
         }
@@ -31,11 +32,11 @@ const RequestToAdminModal = ({ closeModal, isOpen }) => {
 
     const handleRequest = async () => {
         try {
-            setLoading(true);
+            setIsLoading(true);
 
             await mutateAsync();
         } catch (error) {
-            setLoading(false);
+            setIsLoading(false);
             console.log(error);
             toast.error(error.message);
         }
@@ -86,7 +87,7 @@ const RequestToAdminModal = ({ closeModal, isOpen }) => {
                                         className='inline-flex justify-center rounded-md border border-transparent bg-green-100 px-4 py-2 text-sm font-medium text-green-900 hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2'
                                     >
                                         {
-                                            loading ? <ImSpinner3 className='animate-spin' /> : 'Request'
+                                            isLoading ? <ImSpinner3 className='animate-spin' /> : 'Request'
                                         }
                                     </button>
                                     <button

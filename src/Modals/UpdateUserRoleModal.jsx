@@ -14,10 +14,11 @@ import toast from 'react-hot-toast';
 const UpdateUserRoleModal = ({ closeModal, isOpen, _id, refetch }) => {
     const axiosCommon = useAxiosCommon();
     const {loading, setLoading} = useAuth();
+    const [isLoading, setIsLoading] = useState(false)
     const queryClient = useQueryClient()
 
 
-    const { data: userDetails, isLoading } = useQuery({
+    const { data: userDetails } = useQuery({
         queryKey: ['userDetails', _id],
         queryFn: async () => {
             const { data } = await axiosCommon.get(`/user-details/${_id}`);
@@ -32,7 +33,7 @@ const UpdateUserRoleModal = ({ closeModal, isOpen, _id, refetch }) => {
         },
 
         onSuccess : () => {
-            setLoading(false);
+            setIsLoading(false);
             toast.success("Updated User Role Successfully");
             closeModal();
             queryClient.invalidateQueries(['users'])
@@ -49,14 +50,14 @@ const UpdateUserRoleModal = ({ closeModal, isOpen, _id, refetch }) => {
 
     const handleUpdateRole = async() => {
         try{
-            setLoading(true);
+            setIsLoading(true);
 
             if(newRole !== "" || newRole){
                 await mutateAsync(newRole)
             }
 
         }catch(error){
-            setLoading(false)
+            setIsLoading(false)
             console.log(error);
             toast.error(error.message)
         }
@@ -111,7 +112,7 @@ const UpdateUserRoleModal = ({ closeModal, isOpen, _id, refetch }) => {
                                             className="inline-flex justify-center rounded-full bg-red-500 text-white px-6 py-2 text-sm font-medium hover:bg-red-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2"
                                         >
                                             {
-                                                loading ? <ImSpinner3 className='animate-spin' /> : 'Update'
+                                                isLoading ? <ImSpinner3 className='animate-spin' /> : 'Update'
                                             }
                                         </button>
 
